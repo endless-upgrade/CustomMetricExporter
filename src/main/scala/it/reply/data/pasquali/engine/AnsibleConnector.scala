@@ -64,7 +64,7 @@ case class AnsibleConnector(ansibleHome : String,
         """"changed": false,""" +
         """"ping": "pong""""+
         """}"""
-      
+
       state += res.contains(pong)
     }
 
@@ -86,7 +86,7 @@ case class AnsibleConnector(ansibleHome : String,
 
     logger.info(s" .......................... ANSIBLE COMMAND $query")
 
-    var res = s"""/opt/monitoring/DevOpsMetricExposer/ansible/ping.sh $targets""" !!
+    var res = s"""ansible/ping.sh $targets""" !!
 
     logger.info(res)
 
@@ -141,15 +141,15 @@ case class AnsibleConnector(ansibleHome : String,
 
     logger.info(" .......................... ANSIBLE CHECK SERVICE")
 
-    val query = s"""sudo ansible-playbook -i "$machineAddress," test.yml \""" +
-    s"""-e 'host_key_checking=False' \""" +
-    s"""--extra-vars="{SERVICE: [$targets]}" \""" +
-    s"""--private-key=/path/to/rsa/key \""" +
+    val query = s"""sudo ansible-playbook -i "$machineAddress," test.yml \\""" +
+    s"""-e 'host_key_checking=False' \\""" +
+    s"""--extra-vars="{SERVICE: [$targets]}" \\""" +
+    s"""--private-key=/path/to/rsa/key \\""" +
     s"""-e 'ansible_ssh_user=user' """
 
     logger.info(s" .......................... ANSIBLE COMMAND $query")
 
-    var res = s"""/opt/monitoring/DevOpsMetricExposer/ansible/test-service.sh $machineAddress $targets""" !!
+    var res = s"""ansible/test-service.sh $machineAddress $targets""" !!
 
     logger.info(res)
 

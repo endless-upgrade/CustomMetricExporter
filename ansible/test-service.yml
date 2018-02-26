@@ -8,4 +8,4 @@
         name: "{{ item }}"
         state: started
         enabled: yes
-      with_items: {{ SERVICE }}
+      with_items: "{{ SERVICE }}"
