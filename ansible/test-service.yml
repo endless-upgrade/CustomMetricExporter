@@ -1,0 +1,11 @@
+#ansible-playbook -i 'worker-test,' --private-key=/home/xxpasquxx/.ssh/ansible_rsa_key /opt/DevOpsProduction-Orchestrator/ansible/test/test-service.yml  -e 'ansible_ssh_user=xxpasquxx' -e 'host_key_checking=False' --extra-vars "service_pretty=MovieRecommenderRT service=devops-rtml"
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: Ensure {{ SERVICE }} is running and starts on boot
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      with_items: {{ SERVICE }}
