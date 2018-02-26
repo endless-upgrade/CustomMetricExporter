@@ -17,14 +17,6 @@ case class AnsibleConnector(ansibleHome : String,
 
     logger.info(" .......................... ANSIBLE PING")
 
-    val query = s"""ansible -i '$machineAddress,' all """ +
-                   s"""--private-key=$SSHKeyFile """ +
-                   s"""-e 'ansible_ssh_user=$ansibleSSHUser' """ +
-                   s"""-e 'host_key_checking=False' """ +
-                   s"""-m ping"""
-
-    logger.info(s" .......................... ANSIBLE COMMAND $query")
-
     var res =
       s"""ansible -i '$machineAddress,' all """ +
         s"""--private-key=$SSHKeyFile """ +
@@ -37,18 +29,10 @@ case class AnsibleConnector(ansibleHome : String,
 
   def pingMultiple(addrs : Array[String]) : mutable.ArrayBuffer[Boolean] = {
 
-    var targets = ""
-    for(a <- addrs) targets += a+","
-
     logger.info(" .......................... ANSIBLE PING")
 
-    val query = s"""ansible -i '$targets' all """ +
-      s"""--private-key=$SSHKeyFile """ +
-      s"""-e 'ansible_ssh_user=$ansibleSSHUser' """ +
-      s"""-e 'host_key_checking=False' """ +
-      s"""-m ping"""
-
-    logger.info(s" .......................... ANSIBLE COMMAND $query")
+    var targets = ""
+    for(a <- addrs) targets += a+","
 
     var res =
       s"""ansible -i '$targets,' all """ +
@@ -78,15 +62,7 @@ case class AnsibleConnector(ansibleHome : String,
 
     logger.info(" .......................... ANSIBLE PING")
 
-    val query = s"""ansible -i '$targets' all """ +
-      s"""--private-key=$SSHKeyFile """ +
-      s"""-e 'ansible_ssh_user=$ansibleSSHUser' """ +
-      s"""-e 'host_key_checking=False' """ +
-      s"""-m ping"""
-
-    logger.info(s" .......................... ANSIBLE COMMAND $query")
-
-    var res = s"""ansible/ping.sh $targets""" !!
+    var res = s"""/opt/monitoring/ping.sh $targets""" !!
 
     logger.info(res)
 
@@ -107,16 +83,6 @@ case class AnsibleConnector(ansibleHome : String,
   def checkServiceRunning(machineAddress : String, service : String) : Boolean = {
 
     logger.info(" .......................... ANSIBLE CHECK SERVICE")
-
-    val query = s"""ansible-playbook -i '$machineAddress,' all """ +
-      s"""--private-key=$SSHKeyFile """ +
-      s"""ansible/test-service.yml """+
-      s"""-e 'ansible_ssh_user=$ansibleSSHUser' """ +
-      s"""-e 'host_key_checking=False' """ +
-      s"""--extra-vars "service_pretty=$service service=$service" """ +
-      s"""| tail -n 2 """
-
-    logger.info(s" .......................... ANSIBLE COMMAND $query")
 
     var res = s"""ansible-playbook -i '$machineAddress,' all """ +
       s"""--private-key=$SSHKeyFile """ +
@@ -141,15 +107,7 @@ case class AnsibleConnector(ansibleHome : String,
 
     logger.info(" .......................... ANSIBLE CHECK SERVICE")
 
-    val query = s"""sudo ansible-playbook -i "$machineAddress," test.yml \\""" +
-    s"""-e 'host_key_checking=False' \\""" +
-    s"""--extra-vars="{SERVICE: [$targets]}" \\""" +
-    s"""--private-key=/path/to/rsa/key \\""" +
-    s"""-e 'ansible_ssh_user=user' """
-
-    logger.info(s" .......................... ANSIBLE COMMAND $query")
-
-    var res = s"""ansible/test-service.sh $machineAddress $targets""" !!
+    var res = s"""/opt/monitoring/test-service.sh $machineAddress $targets""" !!
 
     logger.info(res)
 
@@ -162,7 +120,6 @@ case class AnsibleConnector(ansibleHome : String,
 
     status
   }
-
 
   def getAnsibleRunResult(lastLine : String) : AnsibleResult = {
 

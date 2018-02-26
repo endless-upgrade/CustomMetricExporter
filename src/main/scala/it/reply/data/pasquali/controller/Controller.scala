@@ -69,6 +69,8 @@ class Controller extends ScalatraServlet with FlashMapSupport with ScalateSuppor
     rr += s"node_exporter on localhost state : ${if(stats(2)) "running" else "stop :("}"
     rr += s"grafana on localhost state : ${if(stats(3)) "running" else "stop :("}"
     rr += s"pushgateway on localhost state : ${if(stats(4)) "running" else "stop :("}"
+
+    rr
   }
 
   get("/service/status/:machine/:service") {
